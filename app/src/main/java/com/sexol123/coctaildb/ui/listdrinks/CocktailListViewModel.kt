@@ -10,6 +10,7 @@ import com.sexol123.coctaildb.domain.interactor.drink.DrinkInteractorImpl
 import com.sexol123.coctaildb.ui.interactor.drink.IDrinkInteractor
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import java.util.*
 
 class CocktailListViewModel: BaseViewModel() {
     private val tag = this::class.java.simpleName
@@ -29,29 +30,24 @@ class CocktailListViewModel: BaseViewModel() {
             }, ::onError).also { mDisposables.add(it) }
     }
 
-    fun getDrinksCategory(){
-        screenState.value = CoctailListScreenState.ShowLoading
-
-        val list = ArrayList<UiDrinkBase>()
-        drinkInteractor.loadDrinksCategory().map { list1 ->
-            Observable.fromIterable(list1)
-                .concatMap { item ->
-                    drinkInteractor.loadDrinksByCategory(item.title).toObservable()
-                        .map {
-                            list.add(item)
-                            list.addAll(it)
-                            list
-                        }
-                }.doOnComplete {
-                    mUpdateData.postValue(list)
-                    screenState.postValue(CoctailListScreenState.HideLoading)
-                }
-        }
-            .subscribeOn(Schedulers.io())
+    fun getAllCategoryAndDrinksAsListToUi() {
+        val listFinal = LinkedList<UiDrinkBase>()
+        drinkInteractor.loadDrinksCategory().subscribeOn(Schedulers.io())
+            .doOnSubscribe { screenState.postValue(CoctailListScreenState.ShowLoading) }
+            .flatMapObservable {
+                Observable.fromIterable(it)
+            }
+            .concatMapSingle { category ->
+                listFinal.add(category)
+                drinkInteractor.loadDrinksByCategory(category.title)
+            }
+            .collect({ listFinal }, { list, items -> list.addAll(items) })
+            .doFinally { screenState.postValue(CoctailListScreenState.HideLoading) }
             .subscribe({
-                it.subscribe()
+                mUpdateData.postValue(it)
             }, ::onError).also { mDisposables.add(it) }
     }
+
 
     private fun onError(it: Throwable){
         Log.d(tag, it.localizedMessage , it.fillInStackTrace())

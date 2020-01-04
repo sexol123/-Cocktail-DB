@@ -53,7 +53,7 @@ class CocktailListFragment: Fragment() {
         }
 
         if (savedInstanceState == null){ //first time start
-            viewModel.getDrinksCategory()
+            viewModel.getAllCategoryAndDrinksAsListToUi()
         }
     }
 
