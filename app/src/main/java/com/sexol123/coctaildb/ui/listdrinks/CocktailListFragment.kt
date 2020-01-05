@@ -54,7 +54,7 @@ class CocktailListFragment : Fragment() {
             viewModel.goToDetailedScreen()
         }
 
-        if (savedInstanceState == null || viewModel.mUpdateData.value == null) { //first time start
+        if (viewModel.mUpdateData.value == null) { //first time start
             viewModel.getAllCategoriesAndShowFirstList()
         }
     }
