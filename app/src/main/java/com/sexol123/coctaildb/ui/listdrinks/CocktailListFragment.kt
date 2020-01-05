@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.sexol123.coctaildb.R
 import com.sexol123.coctaildb.databinding.CoctailListFragmentBinding
 import com.sexol123.coctaildb.ui.itemdetailed.DrinkDetailedFragment
@@ -16,10 +17,10 @@ import com.sexol123.coctaildb.ui.itemdetailed.DrinkDetailedViewModel
 import kotlinx.android.synthetic.main.coctail_list_fragment.*
 import kotlinx.android.synthetic.main.coctail_list_fragment.view.*
 
-class CocktailListFragment: Fragment() {
+class CocktailListFragment : Fragment() {
     private lateinit var viewModel: CocktailListViewModel
     private lateinit var mBinding: CoctailListFragmentBinding
-    private lateinit var mLayoutManager :LinearLayoutManager
+    private lateinit var mLayoutManager: LinearLayoutManager
     private val mAdapter = CocktailListAdapter()
     private lateinit var drinkListViewModel: DrinkDetailedViewModel
     private val taged = this::class.java.simpleName
@@ -30,7 +31,8 @@ class CocktailListFragment: Fragment() {
         mBinding =
             DataBindingUtil.inflate(inflater, R.layout.coctail_list_fragment, container, false)
         mBinding.lifecycleOwner = this.viewLifecycleOwner
-        viewModel = ViewModelProviders.of(this.requireActivity()).get(CocktailListViewModel::class.java)
+        viewModel =
+            ViewModelProviders.of(this.requireActivity()).get(CocktailListViewModel::class.java)
         mBinding.vm = viewModel
 
         return mBinding.root
@@ -52,8 +54,8 @@ class CocktailListFragment: Fragment() {
             viewModel.goToDetailedScreen()
         }
 
-        if (savedInstanceState == null){ //first time start
-            viewModel.getAllCategoryAndDrinksAsListToUi()
+        if (savedInstanceState == null || viewModel.mUpdateData.value == null) { //first time start
+            viewModel.getAllCategoriesAndShowFirstList()
         }
     }
 
@@ -86,7 +88,20 @@ class CocktailListFragment: Fragment() {
         })
     }
 
-    private fun initListeners() {}
+    private fun initListeners() {
+        view?.recycler_view?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, amountVertical: Int) {
+                val visibleItemCount = mLayoutManager.childCount
+                val totalItemCount = mLayoutManager.itemCount
+                val firstVisible = mLayoutManager.findFirstVisibleItemPosition()
+                if (amountVertical > 0) {
+                    if ((visibleItemCount + firstVisible) >= totalItemCount) {
+                        viewModel.getDrinksNext()
+                    }
+                }
+            }
+        })
+    }
 
     private fun showLoading() {
         loading.visibility = View.VISIBLE
@@ -96,7 +111,7 @@ class CocktailListFragment: Fragment() {
         loading.visibility = View.GONE
     }
 
-    private fun initUI(){
+    private fun initUI() {
         mLayoutManager = LinearLayoutManager(context)
         view?.recycler_view?.let {
             it.adapter = mAdapter
