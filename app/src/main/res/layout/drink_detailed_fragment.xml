@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="vm"
             type="com.sexol123.coctaildb.ui.itemdetailed.DrinkDetailedViewModel" />
@@ -17,14 +16,64 @@
         tools:context=".ui.itemdetailed.DrinkDetailedFragment">
 
         <TextView
-            android:id="@+id/cocktail_detail"
+            android:id="@+id/detail_fragment_drink_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{vm.drinkDetailed}"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@{vm.drinkDetailed.idDrink}"
+            app:layout_constraintBottom_toTopOf="@+id/detail_fragment_drink_category"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/detail_fragment_drink_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{vm.drinkDetailed.strCategory}"
+            app:layout_constraintBottom_toTopOf="@+id/detail_fragment_drink_date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detail_fragment_drink_id" />
+
+        <TextView
+            android:id="@+id/detail_fragment_drink_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{vm.drinkDetailed.dateModified}"
+            app:layout_constraintBottom_toTopOf="@+id/detail_fragment_drink_alcoholic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detail_fragment_drink_category" />
+
+        <TextView
+            android:id="@+id/detail_fragment_drink_alcoholic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{vm.drinkDetailed.strAlcoholic}"
+            app:layout_constraintBottom_toTopOf="@+id/detail_fragment_drink_tags"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detail_fragment_drink_date" />
+
+        <TextView
+            android:id="@+id/detail_fragment_drink_tags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{vm.drinkDetailed.strTags}"
+            app:layout_constraintBottom_toTopOf="@+id/detail_fragment_drink_instructions"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detail_fragment_drink_alcoholic" />
+
+        <TextView
+            android:id="@+id/detail_fragment_drink_instructions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{vm.drinkDetailed.strInstructions}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detail_fragment_drink_tags" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

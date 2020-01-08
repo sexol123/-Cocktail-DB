@@ -1,10 +1,10 @@
 package com.sexol123.coctaildb.data.repository.drink
 
+import com.sexol123.coctaildb.data.model.UiDrinkDetailed
 import com.sexol123.coctaildb.data.model.UiDrinkItem
 import com.sexol123.coctaildb.data.network.ApiService
 import com.sexol123.coctaildb.data.network.IRequestApi
 import com.sexol123.coctaildb.data.network.responce_model.DrinkCategory
-import com.sexol123.coctaildb.data.network.responce_model.DrinkDetailed
 import com.sexol123.coctaildb.domain.repository.IDrinkRepository
 import io.reactivex.Single
 
@@ -23,8 +23,9 @@ class DrinkRepositoryImpl: IDrinkRepository {
             .map { response -> return@map mapper.mapDrink(response) }
     }
 
-    override fun getDrinksDetaildById(id: String): Single<List<DrinkDetailed>> {
+    override fun getDrinksDetaildById(id: String): Single<UiDrinkDetailed> {
         return service.getCoctailById(id)
-            .map { response -> response.drinks.orEmpty() }
+            .map { response -> return@map mapper.mapDrinkDetailed(response) }
+            .map { list -> list.first() }
     }
 }

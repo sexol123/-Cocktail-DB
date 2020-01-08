@@ -1,6 +1,6 @@
 package com.sexol123.coctaildb.ui.listdrinks
 
-open class CoctailListScreenState {
+sealed class CoctailListScreenState {
     object ShowDrinkDetail : CoctailListScreenState()
     object ShowLoading : CoctailListScreenState()
     object HideLoading : CoctailListScreenState()

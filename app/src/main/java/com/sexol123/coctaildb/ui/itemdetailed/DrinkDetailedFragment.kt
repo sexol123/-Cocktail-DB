@@ -6,9 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sexol123.coctaildb.R
 import com.sexol123.coctaildb.databinding.DrinkDetailedFragmentBinding
+import com.sexol123.coctaildb.ui.listdrinks.DrinkDetailedScreenState
+import kotlinx.android.synthetic.main.coctail_list_fragment.*
 
 class DrinkDetailedFragment : Fragment() {
 
@@ -27,5 +30,27 @@ class DrinkDetailedFragment : Fragment() {
         mBinding.vm = viewModel
 
         return mBinding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        initObservers()
+    }
+
+    private fun initObservers() {
+        viewModel.screenState.observe(viewLifecycleOwner, Observer { state ->
+            when (state) {
+                DrinkDetailedScreenState.ShowLoading -> showLoading()
+                DrinkDetailedScreenState.HideLoading -> hideLoading()
+            }
+        })
+    }
+
+    private fun showLoading() {
+        loading?.visibility = View.VISIBLE
+    }
+
+    private fun hideLoading() {
+        loading?.visibility = View.GONE
     }
 }

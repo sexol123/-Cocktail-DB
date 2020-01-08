@@ -62,7 +62,7 @@ class CocktailListFragment : Fragment() {
     private fun initObservers() {
         viewModel.screenState.observe(this.viewLifecycleOwner, Observer { state ->
             when (state) {
-                is CoctailListScreenState.ShowDrinkDetail -> {
+                CoctailListScreenState.ShowDrinkDetail -> {
                     requireFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_container, DrinkDetailedFragment(), taged)
@@ -71,15 +71,14 @@ class CocktailListFragment : Fragment() {
                     viewModel.cleanState()
                 }
 
-                is CoctailListScreenState.ShowLoading -> {
+                CoctailListScreenState.ShowLoading -> {
                     showLoading()
                 }
 
-                is CoctailListScreenState.HideLoading -> {
+                CoctailListScreenState.HideLoading -> {
                     hideLoading()
                 }
-                else -> {
-                }
+                else -> Unit
             }
         })
 
@@ -104,11 +103,11 @@ class CocktailListFragment : Fragment() {
     }
 
     private fun showLoading() {
-        loading.visibility = View.VISIBLE
+        loading?.visibility = View.VISIBLE
     }
 
     private fun hideLoading() {
-        loading.visibility = View.GONE
+        loading?.visibility = View.GONE
     }
 
     private fun initUI() {
